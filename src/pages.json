@@ -1,0 +1,127 @@
+{
+	"pages": [ 
+    // pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+  {
+			"path": "pages/home/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+        "navigationStyle":"custom",
+        "navigationBarTextStyle": "white"
+			}
+		},
+  {
+			"path": "pages/conversionComplete/index",
+			"style": {
+				"navigationBarTitleText": "转换完成",
+        "navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+     {
+			"path": "pages/timeRecord/index",
+			"style": {
+				"navigationBarTitleText": "时长记录"
+			}
+		},
+    {
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+    
+     {
+			"path": "pages/order/index",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+         "navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+    {
+			"path": "pages/buyPay/index",
+			"style": {
+				"navigationBarTitleText": "购买时长"
+			}
+		},
+      {
+			"path": "pages/loginCode/index",
+      "style": {
+				"navigationBarTitleText": "手机号登录"
+			}
+		},
+    {
+			"path": "pages/conversionRecord/index",
+			"style": {
+				"navigationBarTitleText": "转换记录",
+        "navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+  
+    {
+			"path": "pages/conversion/index",
+			"style": {
+				"navigationBarTitleText": "上传转换",
+        "navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+     {
+			"path": "pages/share/index",
+			"style": {
+				"navigationBarTitleText": "邀请好友",
+        "navigationStyle":"custom",
+        "navigationBarTextStyle": "white"
+			}
+		},
+    {
+			"path": "pages/time/index",
+			"style": {
+				"navigationBarTitleText": "赚时长"
+			}
+		},
+    {
+			"path": "pages/my/index",
+			"style": {
+				"navigationBarTitleText": "我的",
+         "navigationStyle":"custom",
+        "navigationBarTextStyle": "white"
+			}
+		},
+    
+	],
+  "tabBar": {
+    "custom": true,
+    "color": "#000000",
+    "selectedColor": "#000000",
+    "backgroundColor": "#000000",
+    "list": [{
+      "pagePath": "pages/home/index",
+      "text": "首页"
+    }, {
+      "pagePath": "pages/time/index",
+      "text": "赚时长"
+    },{
+      "pagePath": "pages/my/index",
+      "text": "我的"
+    }]
+  },
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+    "usingComponents": {
+      "van-toast": "./wxcomponents/vant/toast/index",
+      "van-loading": "./wxcomponents/vant/loading/index",
+      "van-popup": "./wxcomponents/vant/popup/index",
+      "van-button": "./wxcomponents/vant/button/index",
+      "van-progress": "./wxcomponents/vant/progress/index",
+      "van-icon": "./wxcomponents/vant/icon/index",
+      "van-notify":"./wxcomponents/vant/notify/index",
+      "van-checkbox":"./wxcomponents/vant/checkbox/index",
+      "van-count-down": "./wxcomponents/vant/count-down/index",
+      "van-slider": "./wxcomponents/vant/slider/index",
+      "van-field": "./wxcomponents/vant/field/index",
+      "van-skeleton": "./wxcomponents/vant/skeleton/index",
+      "van-empty": "./wxcomponents/vant/empty/index"
+    }
+	}
+}
