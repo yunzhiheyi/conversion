@@ -346,11 +346,20 @@ export default {
       var _this = this;
       wx.downloadFile({
         url: fileUrl, //仅为示例，并非真实的资源
+        filePath:
+          wx.env.USER_DATA_PATH +
+          "/" +
+          this.conversionComplete.metaInfo.fileName +
+          ".docx",
         success(_res) {
+          console.log(_res);
           if (_res.statusCode === 200) {
-            wx.shareFileMessage({
-              filePath: _res.tempFilePath,
-              success: (data) => {
+            wx.openDocument({
+              filePath: _res.filePath,
+              showMenu: true,
+              fileType: "docx",
+              success: function (res) {
+                console.log("打开文档成功", res);
                 _this.$toast.clear();
               },
               fail: (err) => {
@@ -421,7 +430,7 @@ export default {
         this.$toast({
           type: "info",
           selector: ".van-toast",
-          message: "点击原文本与翻译文本可复制",
+          message: "点击原文或段落即可复制",
         });
         return;
       }

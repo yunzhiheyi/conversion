@@ -1,14 +1,5 @@
 <template>
   <view class="page-content">
-    <view class="empty-view"
-      v-if="!dataList.length">
-      <view class="empty">
-        <image class="image"
-          src="https://cdn.maxbox.com.cn/image/icon-empty.png"
-          mode="scaleToFill" />
-        <view class="text">您还没有订单记录哦</view>
-      </view>
-    </view>
     <z-paging :auto="true"
       :auto-clean-list-when-reload="true"
       ref="paging"
@@ -19,9 +10,19 @@
       :to-bottom-loading-more-enabled="false"
       :loading-more-enabled="false"
       show-loading-more-when-reload
+      hide-empty-view
       safe-area-inset-bottom>
       <!-- 数据列表 -->
       <view class="record-list">
+        <view class="empty-view"
+          v-if="!dataList.length">
+          <view class="empty">
+            <image class="image"
+              src="https://cdn.maxbox.com.cn/image/icon-empty.png"
+              mode="scaleToFill" />
+            <view class="text">您还没有订单记录哦</view>
+          </view>
+        </view>
         <view v-for="(item, idnex) in dataList"
           :key="idnex"
           class="order-item">
@@ -49,14 +50,12 @@
   <van-toast class="van-toast" />
 </template>
 <script setup>
-import { onMounted, ref, getCurrentInstance } from "vue";
-import { onShow } from "@dcloudio/uni-app";
+import { ref, getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance();
 const paging = ref(null);
-let dataList = ref([{}, {}, {}, {}, {}, {}]);
+let dataList = ref([{}, {}, {}, {}, {}, {}, {}, {}]);
 var getList = (pageNum = 1, pageSize = 10) => {
   proxy.$api.orderList({ current: pageNum, pageSize: pageSize }).then((res) => {
-    console.log(paging);
     paging.value.completeByTotal(res.data.result || []);
   });
 };

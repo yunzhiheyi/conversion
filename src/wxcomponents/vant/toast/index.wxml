@@ -10,7 +10,7 @@
       <van-loading wx:if="{{ type === 'loading' }}" color="white" type="{{ loadingType }}" custom-class="van-toast__loading" />
       <view wx:if="{{ message && type !== 'loading' }}" class="van-toast__text custom_toast">
         <image class="toastIcon" src="https://cdn.maxbox.com.cn/image/icon-toast-{{ type }}.png" mode="" />
-        {{ message }}
+        <text>{{ message }}</text>
       </view>
       <view wx:else class="van-toast__text">{{ message }}</view>
     </block>

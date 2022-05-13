@@ -105,17 +105,11 @@ export default {
       if (!this.form.mobile && !this.form.code) {
         return;
       }
-      if (!this.form.mobile) {
-        return this.$toast({
-          type: "fail",
-          selector: ".van-toast",
-          message: "请输入你的手机号码",
-        });
-      }
       if (!this.isPhoneNumber(this.form.mobile)) {
         return this.$toast({
           type: "fail",
           selector: ".van-toast",
+          duration: 0,
           message: "请输入正确的手机号码",
         });
       }
