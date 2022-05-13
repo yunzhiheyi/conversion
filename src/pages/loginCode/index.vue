@@ -2,39 +2,35 @@
   <view class="page-content">
     <view class="content">
       <view class="logo-view">
-        <image class="_logo" src="/static/icon-logo.png" mode="scaleToFill" />
-        <view>AI转换精灵</view>
+        <image class="_logo"
+          src="https://cdn.maxbox.com.cn/image/icon-logo.png"
+          mode="scaleToFill" />
+        <view>语音转换精灵</view>
       </view>
       <view class="input">
-        <van-field
-          type="number"
+        <van-field type="number"
           :value="form.mobile"
           placeholder="请输入手机号"
           maxlength="11"
           data-value="mobile"
           @change="onInputChange"
-          clearable
-        />
+          clearable />
       </view>
       <view class="input">
-        <van-field
-          type="number"
+        <van-field type="number"
           :value="form.code"
           placeholder="请输入验证码"
           maxlength="6"
           clearable
           data-value="code"
           @change="onInputChange"
-          use-button-slot
-        >
-          <van-button
-            size="small"
+          use-button-slot>
+          <van-button size="small"
             type="primary"
             slot="button"
             native-type="button"
             :disabled="state === 0"
-            @click="getCode"
-          >
+            @click="getCode">
             {{
               state === -1
                 ? "获取验证码"
@@ -45,29 +41,25 @@
           </van-button>
         </van-field>
       </view>
-      <view
-        class="mobile-btn"
+      <view class="mobile-btn"
         :class="{ disabled: !form.mobile && !form.code }"
-        @click="onSubmit"
-      >
-        <van-loading v-if="isLoading" color="#fff" size="40rpx" /><text v-else
-          >登录/注册</text
-        ></view
-      >
+        @click="onSubmit">
+        <van-loading v-if="isLoading"
+          color="#fff"
+          size="40rpx" /><text v-else>登录/注册</text>
+      </view>
       <view class="privacy">
-        <view
-          class="checked"
+        <view class="checked"
           :class="{ animation: !checked && isChecked }"
-          v-if="!checked && isChecked"
-          >请先勾选同意</view
-        >
-        <van-checkbox :value="checked" icon-size="28rpx" @change="onChange"
-          ><text class="_text">已阅读并同意</text></van-checkbox
-        ><text class="__text"
-          ><text class="_btn">用户协议</text>和<text class="_btn"
-            >隐私政策</text
-          ></text
-        >
+          v-if="!checked && isChecked">请先勾选同意</view>
+        <van-checkbox :value="checked"
+          icon-size="28rpx"
+          @change="onChange"><text class="_text">已阅读并同意</text></van-checkbox>
+        <view class="__text">
+          <view class="_btn"
+            @click="goWebview(1)">用户协议</view>和<view class="_btn"
+            @click="goWebview(2)">隐私政策</view>
+        </view>
       </view>
     </view>
   </view>
@@ -75,6 +67,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+const systemInfo = uni.getSystemInfoSync();
 export default {
   data() {
     return {
@@ -101,6 +94,9 @@ export default {
       this.checked = !this.checked;
       this.isChecked = this.checked;
       this.isCheckedBtn = this.checked;
+    },
+    goWebview(type) {
+      uni.navigateTo({ url: "/pages/webview/index", query: { type } });
     },
     onInputChange(event) {
       this.form[event.currentTarget.dataset.value] = event.detail;
@@ -145,6 +141,7 @@ export default {
           code: this.form.code,
           inviter_code: this.inviter_code,
           isLoading: true, // 去掉请求的loading 1
+          systemType: systemInfo.platform,
         })
         .then((res) => {
           this.isLoading = false;
@@ -340,9 +337,11 @@ page {
     .__text {
       font-size: 28rpx;
       color: #999;
+      display: inline-block;
       ._btn {
         color: #4879f6;
         padding: 0 2rpx;
+        display: inline-block;
         text-decoration: underline;
       }
     }

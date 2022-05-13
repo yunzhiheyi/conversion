@@ -1,67 +1,65 @@
 <template>
   <view class="page-content">
     <view class="video_audio-view">
-      <van-skeleton
-        class="paytime-avatar"
+      <van-skeleton class="paytime-avatar"
         avatar
         avatar-shape="square"
         avatar-size="160rpx"
         :loading="
           !conversionComplete.metaInfo.cover && conversionComplete.type !== '2'
-        "
-      ></van-skeleton>
-      <image
-        class="image"
+        "></van-skeleton>
+      <image class="image"
         v-if="
           conversionComplete.metaInfo.cover || conversionComplete.type === '2'
         "
         :src="
           conversionComplete.type === '2'
-            ? '/static/icon-audio.png'
+            ? 'https://cdn.maxbox.com.cn/image/icon-audio.png'
             : conversionComplete.metaInfo.cover
         "
-        mode="aspectFill"
-      />
-      <view class="play" v-if="conversionComplete.metaInfo.cover"></view>
+        mode="aspectFill" />
+      <view class="play"
+        v-if="conversionComplete.metaInfo.cover"></view>
       <view class="v_info">
-        <van-skeleton
-          class="paytime-title"
+        <van-skeleton class="paytime-title"
           row="2"
           :row-width="['90%', '60%']"
-          :loading="!conversionComplete.metaInfo.fileName"
-        ></van-skeleton>
-        <view class="name" v-if="conversionComplete.metaInfo.fileName">{{
+          :loading="!conversionComplete.metaInfo.fileName"></van-skeleton>
+        <view class="name"
+          v-if="conversionComplete.metaInfo.fileName">{{
           conversionComplete.metaInfo.fileName
         }}</view>
-        <view class="time" v-if="conversionComplete.metaInfo.duration"
-          >时长
-          <van-count-down
-            class="control-count-down"
+        <view class="time"
+          v-if="conversionComplete.metaInfo.duration">时长
+          <van-count-down class="control-count-down"
             millisecond
             v-if="conversionComplete.metaInfo.duration"
             :time="conversionComplete.metaInfo.duration * 1000"
             :auto-start="false"
-            format="HH:mm:ss"
-        /></view>
-        <text class="saveAudio" @click="copyAudio">保存音频</text>
+            format="HH:mm:ss" />
+        </view>
+        <text class="saveAudio"
+          @click="copyAudio">保存音频</text>
       </view>
     </view>
     <view class="conversion-content">
-      <scroll-view scroll-y class="concent">
+      <scroll-view scroll-y
+        class="concent">
         <view class="flex">
           <template v-if="isPiecewise">
-            <view class="zh" @click="copyText(conversionComplete.taskText)">
+            <view class="zh"
+              @click="copyText(conversionComplete.taskText)">
               {{ conversionComplete.taskText }}
             </view>
-            <view class="after" v-if="taskTextEn"
-              ><text class="text">翻译后</text></view
-            >
-            <view class="en" @click="copyText(taskTextEn)" v-if="taskTextEn">
+            <view class="after"
+              v-if="taskTextEn"><text class="text">翻译后</text></view>
+            <view class="en"
+              @click="copyText(taskTextEn)"
+              v-if="taskTextEn">
               {{ taskTextEn }}
             </view>
           </template>
-          <van-skeleton
-            class="paytime-flex"
+          <van-skeleton class="paytime-flex"
             row="16"
             :row-width="[
               '60%',
@@ -82,70 +80,49 @@
               '90%',
               '90%',
             ]"
-            :loading="!conversionComplete.taskDetailed.length"
-          >
+            :loading="!conversionComplete.taskDetailed.length">
           </van-skeleton>
-          <view class="taskPiecewise" :class="{ block: !isPiecewise }">
-            <view
-              :id="'taskDetailed_' + index"
+          <view class="taskPiecewise"
+            :class="{ block: !isPiecewise }">
+            <view :id="'taskDetailed_' + index"
               class="taskDetailed_"
               :class="{
                 active: isActive(item, index),
               }"
               v-for="(item, index) in conversionComplete.taskDetailed"
-              :key="index"
-            >
+              :key="index">
               <view class="taskDetailed">
                 <view class="text">
-                  <view class="fromLang" @click="copyText(item.text)">{{
+                  <view class="fromLang"
+                    @click="copyText(item.text)">{{
                     item.text
                   }}</view>
-                  <view
-                    class="toLang"
+                  <view class="toLang"
                     @click="copyText(item.taskTextEn)"
-                    v-if="item.taskTextEn"
-                    >{{ item.taskTextEn }}</view
-                  >
+                    v-if="item.taskTextEn">{{ item.taskTextEn }}</view>
                 </view>
-                <view class="time control-count-down"
-                  ><van-count-down
-                    millisecond
+                <view class="time control-count-down">
+                  <van-count-down millisecond
                     :time="item.start_time + 1000"
                     :auto-start="false"
                     format="mm:ss"
-                    v-if="item.start_time > 0"
-                  />
-                  <text v-else class="van-count-down">00:00</text></view
-                >
+                    v-if="item.start_time > 0" />
+                  <text v-else
+                    class="van-count-down">00:00</text>
+                </view>
               </view>
             </view>
           </view>
         </view>
-        <view
-          class="side_canvas"
+        <view class="side_canvas"
           :style="
             'height:' + (flexHeight > contentH ? flexHeight : contentH) + 'px;'
           "
-          v-if="!isPiecewise"
-        ></view>
-        <view
-          class="slider-audio"
+          v-if="!isPiecewise"></view>
+        <view class="slider-audio"
           :class="{ block: !isPiecewise }"
-          :style="'height:' + (flexHeight - 15) + 'px;'"
-        >
-          <!-- <j-slider
-            v-model="sTime"
-            :max="flexHeight"
-            :min="0"
-            :size="flexHeight"
-            sizeUnit="px"
-            @dragstart="onSliderStartDrag"
-            @drag="onSliderDrag"
-            @dragend="onSliderDragEnd"
-            @change="onSliderChange"
-          /> -->
-          <van-slider
-            :value="sTime"
+          :style="'height:' + (flexHeight - 15) + 'px;'">
+          <van-slider :value="sTime"
             vertical="true"
             :max="flexHeight"
             bar-height="40rpx"
@@ -155,103 +132,102 @@
             @dragend="onSliderDragEnd"
             @change="onSliderChange"
             active-color="none"
-            inactive-color="none"
-            ><view
-              class="custom-button"
+            inactive-color="none">
+            <view class="custom-button"
               v-if="
                 conversionComplete.taskDetailed.length > 0 && isCustomButton
               "
-              slot="button"
-            >
-              <view class="currentTime"
-                >{{ $tools.formatTime(currentTime * 1000) }}
+              slot="button">
+              <view class="currentTime">{{ $tools.formatTime(currentTime * 1000) }}
               </view>
-            </view></van-slider
-          >
-          <view
-            class="customPlay"
+            </view>
+          </van-slider>
+          <view class="customPlay"
             @click="openAudioPlay"
-            v-if="conversionComplete.taskDetailed.length > 0"
-          >
-            <van-icon size="34rpx" v-if="!isPlay" name="play-circle" />
-            <van-icon size="34rpx" v-else name="pause-circle" />
+            v-if="conversionComplete.taskDetailed.length > 0">
+            <van-icon size="34rpx"
+              v-if="!isPlay"
+              name="play-circle" />
+            <van-icon size="34rpx"
+              v-else
+              name="pause-circle" />
           </view>
         </view>
       </scroll-view>
     </view>
 
     <view class="conversion-fixed">
-      <view class="bar" @click="openDelPopup">
+      <view class="bar"
+        @click="openDelPopup">
         <view class="icon delete"> </view>
         <view class="name">删除</view>
       </view>
-      <view class="bar" @click="openPiecewise">
+      <view class="bar"
+        @click="openPiecewise">
         <view class="icon piecewise"> </view>
         <view class="name">{{ !isPiecewise ? "全文展示" : "分段展示" }}</view>
       </view>
-      <view class="bar" @click="openTranslate">
+      <!-- <view class="bar" @click="openTranslate">
         <view class="icon translate"> </view>
         <view class="name">中英互译</view>
-      </view>
-      <view class="bar" @click="toolsCopyText">
+      </view> -->
+      <view class="bar"
+        @click="toolsCopyText">
         <view class="icon copy"> </view>
         <view class="name">复制文本</view>
       </view>
-      <view class="bar" @click="generateWrod">
+      <view class="bar"
+        @click="generateWrod">
         <view class="icon send"> </view>
         <view class="name">发送文档</view>
       </view>
     </view>
   </view>
-  <van-popup round :show="isPopupShow" @close="onDelClose" zIndex="99">
+  <van-popup round
+    :show="isPopupShow"
+    @close="onDelClose"
+    zIndex="99">
     <view class="_popup_dialog">
       <view class="_popup-title">提示</view>
       <view class="_popup-content">确定要删除当前记录吗?</view>
       <view class="_popup-botton">
-        <view class="_popup-cancel" @click="cancelPopup">取消</view>
-        <view class="_popup-confirm" @click="confirmPopup">
-          <van-loading v-if="isLoading" color="#fff" size="40rpx" /><text v-else
-            >删除</text
-          ></view
-        >
+        <view class="_popup-cancel"
+          @click="cancelPopup">取消</view>
+        <view class="_popup-confirm"
+          @click="confirmPopup">
+          <van-loading v-if="isLoading"
+            color="#fff"
+            size="40rpx" /><text v-else>删除</text>
+        </view>
       </view>
     </view>
   </van-popup>
-  <van-popup
-    :show="isPopup"
+  <van-popup :show="isPopup"
     round
     position="bottom"
     @close="onTranslateClose"
-    zIndex="99"
-  >
+    zIndex="99">
     <view class="action-sheet">
-      <view class="action" @click="startTranslate('zh_CN', 'en')"
-        >中文<text class="arrow">→</text>英文</view
-      >
-      <view
-        class="action van-hairline--top"
-        @click="startTranslate('zh_CN', 'ko')"
-        >中文<text class="arrow">→</text> 韩语</view
-      >
-      <view
-        class="action van-hairline--top"
-        @click="startTranslate('zh_CN', 'ja')"
-        >中文<text class="arrow">→</text>日语</view
-      >
-      <view class="action van-hairline--top" @click="startTranslate('ko', 'en')"
+      <view class="action"
+        @click="startTranslate('zh_CN', 'en')">中文<text class="arrow">→</text>英文</view>
+      <view class="action van-hairline--top"
+        @click="startTranslate('zh_CN', 'ko')">中文<text class="arrow">→</text> 韩语</view>
+      <view class="action van-hairline--top"
+        @click="startTranslate('zh_CN', 'ja')">中文<text class="arrow">→</text>日语</view>
+      <!-- <view class="action van-hairline--top" @click="startTranslate('ko', 'en')"
         >韩语<text class="arrow">→</text>英文</view
       >
       <view class="action van-hairline--top" @click="startTranslate('ja', 'en')"
         >日语<text class="arrow">→</text> 英文</view
-      >
-      <view class="cancel" @click="onTranslateClose">取消</view>
+      > -->
+      <view class="cancel"
+        @click="onTranslateClose">取消</view>
     </view>
   </van-popup>
   <van-toast class="van-toast" />
   <van-notify class="van-notify" />
 </template>
 <script>
-import JSlider from "../../components/JSlider/index";
 const systemInfo = uni.getSystemInfoSync();
 export default {
   data() {
@@ -287,9 +263,6 @@ export default {
       progress: 0,
       timmerHandle: null,
     };
-  },
-  components: {
-    JSlider,
   },
   watch: {
     conversionComplete(data) {
@@ -327,7 +300,6 @@ export default {
     const _concent = await this.$tools.selectorQuery(".concent");
     this.contentW = _data.width;
     this.contentH = _concent.height - 10;
-    console.log(systemInfo.windowHeight, _concent, _res.height, systemInfo);
   },
   methods: {
     async taskDetailedTop(callbark) {
@@ -345,7 +317,6 @@ export default {
           value: _resData.top + 18 - _audioData.top,
           time: Math.ceil(item.start_time / 1000),
         });
-        console.log(_resData.top + 18, _audioData.top);
       });
       if (callbark) {
         callbark && callbark(_audioData.top);
@@ -380,7 +351,6 @@ export default {
             wx.shareFileMessage({
               filePath: _res.tempFilePath,
               success: (data) => {
-                console.log(data);
                 _this.$toast.clear();
               },
               fail: (err) => {
@@ -417,13 +387,7 @@ export default {
     // 复制音频地址
     copyAudio() {
       var _this = this;
-      this.$toast({
-        type: "loading",
-        selector: ".van-toast",
-        duration: 0,
-        forbidClick: true,
-        message: "正在保存中",
-      });
+      wx.showLoading({ title: "加载中" });
       wx.downloadFile({
         url: this.conversionComplete.audioSrc, //仅为示例，并非真实的资源
         success(res) {
@@ -432,14 +396,19 @@ export default {
               filePath: res.tempFilePath,
               success: (res) => {
                 _this.innerAudioContext.pause();
-                console.log(res);
+                wx.hideLoading();
               },
               fail: (err) => {
                 _this.innerAudioContext.pause();
+                wx.hideLoading();
                 console.log(err);
               },
             });
           }
+        },
+        fail: (err) => {
+          wx.hideLoading();
+          console.log(err);
         },
       });
     },
@@ -936,29 +905,29 @@ page {
     }
     .delete {
       &::before {
-        background-image: url("/static/icon-delete.png");
+        background-image: url("https://cdn.maxbox.com.cn/image/icon-delete.png");
         background-size: 42rpx 42rpx;
       }
     }
     .copy {
       &::before {
-        background-image: url("/static/icon-copy.png");
+        background-image: url("https://cdn.maxbox.com.cn/image/icon-copy.png");
       }
     }
     .send {
       &::before {
-        background-image: url("/static/icon-send.png");
+        background-image: url("https://cdn.maxbox.com.cn/image/icon-send.png");
       }
     }
     .translate {
       &::before {
-        background-image: url("/static/icon-translate.png");
+        background-image: url("https://cdn.maxbox.com.cn/image/icon-translate.png");
       }
     }
     .piecewise {
       &::before {
         background-size: 42rpx 50rpx;
-        background-image: url("/static/icon-piecewise.png");
+        background-image: url("https://cdn.maxbox.com.cn/image/icon-piecewise.png");
       }
     }
     .name {

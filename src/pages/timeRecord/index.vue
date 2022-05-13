@@ -7,56 +7,50 @@
           $tools.formatSeconds(userInfo.remaining_time)
         }}</text>
       </view>
-      <text class="buy-time" @click="openTask">领取更多</text>
+      <text class="buy-time"
+        @click="openTask">领取更多</text>
     </view>
-    <view
-      class="time-record-list"
+    <view class="time-record-list"
       :style="
         'height:' +
         (!dataList.length || dataList.length <= 6 ? contentH + 'px' : 'auto')
-      "
-    >
+      ">
       <!-- <view class="name">本周已免费领取 <text class="red">12分钟</text></view> -->
       <view class="record-list">
-        <view class="empty-view" v-if="!dataList.length">
+        <view class="empty-view"
+          v-if="!dataList.length">
           <view class="empty">
-            <image
-              class="image"
-              src="/static/icon-empty.png"
-              mode="scaleToFill"
-            />
+            <image class="image"
+              src="https://cdn.maxbox.com.cn/image/icon-empty.png"
+              mode="scaleToFill" />
             <view class="text">暂无时长数据</view>
           </view>
         </view>
-        <template v-for="(item, index) in dataList" :key="index">
-          <view
-            class="item"
-            :class="{ 'van-hairline--bottom': item.recordName }"
-          >
-            <van-skeleton
-              class="timeRecord-flex"
+        <template v-for="(item, index) in dataList"
+          :key="index">
+          <view class="item"
+            :class="{ 'van-hairline--bottom': item.recordName }">
+            <van-skeleton class="timeRecord-flex"
               row="2"
               v-if="!item.recordName"
               :row-width="['100%', '50%']"
-              :loading="!item.recordName"
-            ></van-skeleton>
-            <view class="text" v-if="item.recordName">
+              :loading="!item.recordName"></van-skeleton>
+            <view class="text"
+              v-if="item.recordName">
               <view class="name">{{ item.recordName.name }}</view>
               <view class="time">{{ item.createdAt }}</view>
             </view>
-            <text
-              class="_time"
+            <text class="_time"
               v-if="item.type"
-              :class="{ add: item.type === 2, sub: item.type === 1 }"
-              >{{ item.type === 2 ? "-" : "+"
-              }}{{ $tools.formatSeconds(item.time, true) }}</text
-            >
+              :class="{ add: item.type === 2, sub: item.type === 1 }">{{ item.type === 2 ? "-" : "+"
+              }}{{ $tools.formatSeconds(item.time, true) }}</text>
           </view>
         </template>
       </view>
     </view>
   </view>
-  <task-pupup :show="isPopupShow" @close="onCloseTask" />
+  <task-pupup :show="isPopupShow"
+    @close="onCloseTask" />
   <van-notify class="van-notify" />
   <van-toast class="van-toast" />
 </template>

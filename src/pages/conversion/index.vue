@@ -1,43 +1,49 @@
 <template>
   <view class="page-content">
     <view class="video_audio-view">
-      <image class="image" src="/static/icon-audio.png" mode="scaleToFill" />
+      <image class="image"
+        src="https://cdn.maxbox.com.cn/image/icon-audio.png"
+        mode="scaleToFill" />
       <view class="play"></view>
       <view class="v_info">
         <view class="name">视频标题文字.mp4</view>
         <view class="time">时长 00:00:23</view>
       </view>
-      <view class="delete" @click="onDelete"></view>
+      <view class="delete"
+        @click="onDelete"></view>
     </view>
     <view class="remaining-view">
-      <image class="image" mode="scaleToFill" />
+      <image class="image"
+        mode="scaleToFill" />
       <view class="name">可用时长: 3分10秒</view>
-      <view class="topup-btn" @click="goBuyPay">去充值</view>
+      <view class="topup-btn"
+        @click="goBuyPay">去充值</view>
     </view>
     <view class="buy-botton">开始转换</view>
     <view class="instructions-info">
       <view class="b">说明: </view>
       <view class="p">
-        1、成功提交后请到"转写记录"页面等待，查看转写结果。</view
-      >
-      <view class="p"
-        >2、转写结果不能保证100%准确，会因为声音清晰度而发生变动。</view
-      >
+        1、成功提交后请到"转写记录"页面等待，查看转写结果。</view>
+      <view class="p">2、转写结果不能保证100%准确，会因为声音清晰度而发生变动。</view>
       <view class="p">3、请尽量提供清晰无背景音、噪音的文件。</view>
       <view class="p">4、选择的语言应与音频中的发音对应，提高准确率。</view>
     </view>
   </view>
-  <van-popup round :show="isPopupShow" @close="onClose">
+  <van-popup round
+    :show="isPopupShow"
+    @close="onClose">
     <view class="_popup_dialog">
       <view class="_popup-title">提示</view>
       <view class="_popup-content">确定要删除该文件吗?</view>
       <view class="_popup-botton">
-        <view class="_popup-cancel" @click="cancelPopup">取消</view>
-        <view class="_popup-confirm" @click="confirmPopup">
-          <van-loading v-if="isLoading" color="#fff" size="40rpx" /><text v-else
-            >删除</text
-          ></view
-        >
+        <view class="_popup-cancel"
+          @click="cancelPopup">取消</view>
+        <view class="_popup-confirm"
+          @click="confirmPopup">
+          <van-loading v-if="isLoading"
+            color="#fff"
+            size="40rpx" /><text v-else>删除</text>
+        </view>
       </view>
     </view>
   </van-popup>

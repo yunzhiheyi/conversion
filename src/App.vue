@@ -347,7 +347,7 @@ page {
     left: 80rpx;
     width: 48rpx;
     height: 48rpx;
-    background-image: url("/static/icon-play.png");
+    background-image: url("https://cdn.maxbox.com.cn/image/icon-play.png");
     background-color: rgba(0, 0, 0, 0.2);
   }
   .delete {
@@ -355,13 +355,18 @@ page {
     right: 40rpx;
     width: 32rpx;
     height: 32rpx;
-    background-image: url("/static/icon-delete.png");
+    background-image: url("https://cdn.maxbox.com.cn/image/icon-delete.png");
   }
+
   .v_info {
     flex: 1;
     .name {
       font-size: 32rpx;
       color: #333;
+      overflow: hidden;
+      width: 450rpx;
+      text-overflow: ellipsis; //文本溢出显示省略号
+      white-space: nowrap;
     }
     .time {
       font-size: 24rpx;

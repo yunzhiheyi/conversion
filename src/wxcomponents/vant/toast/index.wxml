@@ -1,33 +1,17 @@
-<van-overlay
-  wx:if="{{ mask || forbidClick }}"
-  show="{{ show }}"
-  z-index="{{ zIndex }}"
-  custom-style="{{ mask ? '' : 'background-color: transparent;' }}"
-/>
-<van-transition
-  show="{{ show }}"
-  custom-style="z-index: {{ zIndex }}"
-  custom-class="van-toast__container"
->
-  <view
-    class="van-toast van-toast--{{ type === 'loading' ? 'icon' : 'text' }} van-toast--{{ position }}"
-    catch:touchmove="noop"
-  >
+<van-overlay wx:if="{{ mask || forbidClick }}" show="{{ show }}" z-index="{{ zIndex }}" custom-style="{{ mask ? '' : 'background-color: transparent;' }}" />
+<van-transition show="{{ show }}" custom-style="z-index: {{ zIndex }}" custom-class="van-toast__container">
+  <view class="van-toast van-toast--{{ type === 'loading' ? 'icon' : 'text' }} van-toast--{{ position }}" catch:touchmove="noop">
     <!-- text only -->
     <text wx:if="{{ type === 'text' }}">{{ message }}</text>
-
     <!-- html only -->
     <rich-text wx:elif="{{ type === 'html' }}" nodes="{{ message }}"></rich-text>
-
     <!-- with icon -->
     <block wx:else>
-      <van-loading
-        wx:if="{{ type === 'loading' }}"
-        color="white"
-        type="{{ loadingType }}"
-        custom-class="van-toast__loading"
-      />
-      <view wx:if="{{ message && type !== 'loading' }}" class="van-toast__text custom_toast"><image class="toastIcon" src="/static/icon-toast-{{ type }}.png" mode="" />{{ message }}</view>
+      <van-loading wx:if="{{ type === 'loading' }}" color="white" type="{{ loadingType }}" custom-class="van-toast__loading" />
+      <view wx:if="{{ message && type !== 'loading' }}" class="van-toast__text custom_toast">
+        <image class="toastIcon" src="https://cdn.maxbox.com.cn/image/icon-toast-{{ type }}.png" mode="" />
+        {{ message }}
+      </view>
       <view wx:else class="van-toast__text">{{ message }}</view>
     </block>
     <slot />

@@ -9,10 +9,17 @@
         "navigationBarTextStyle": "white"
 			}
 		},
-  {
+   {
 			"path": "pages/conversionComplete/index",
 			"style": {
 				"navigationBarTitleText": "转换完成",
+        "navigationBarBackgroundColor": "#ffffff"
+			}
+		},
+     {
+			"path": "pages/webview/index",
+			"style": {
+				"navigationBarTitleText": "语音转换精灵",
         "navigationBarBackgroundColor": "#ffffff"
 			}
 		},
@@ -84,8 +91,7 @@
          "navigationStyle":"custom",
         "navigationBarTextStyle": "white"
 			}
-		},
-    
+		}
 	],
   "tabBar": {
     "custom": true,
@@ -112,7 +118,6 @@
       "van-toast": "./wxcomponents/vant/toast/index",
       "van-loading": "./wxcomponents/vant/loading/index",
       "van-popup": "./wxcomponents/vant/popup/index",
-      "van-button": "./wxcomponents/vant/button/index",
       "van-progress": "./wxcomponents/vant/progress/index",
       "van-icon": "./wxcomponents/vant/icon/index",
       "van-notify":"./wxcomponents/vant/notify/index",

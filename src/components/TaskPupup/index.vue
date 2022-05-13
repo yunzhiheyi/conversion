@@ -1,45 +1,39 @@
 <template>
-  <van-popup
-    round
+  <van-popup round
     custom-style="border-radius: 52rpx 52rpx 0 0"
     position="bottom"
     :safe-area-inset-bottom="false"
     :show="show"
-    @close="onCloseTask"
-  >
+    @close="onCloseTask">
     <view class="_popup_task">
       <view class="task-name">做任务<text class="nbsp">赚时长</text></view>
-      <image class="bg" src="/static/icon-task-bg.png" mode="scaleToFill" />
-      <van-icon
-        name="clear"
+      <image class="bg"
+        src="https://cdn.maxbox.com.cn/image/icon-task-bg.png"
+        mode="scaleToFill" />
+      <van-icon name="clear"
         class="task_close"
         color="#ffffff"
         size="50rpx"
-        @click="onCloseTask"
-      />
+        @click="onCloseTask" />
       <view class="task">
-        <view class="official">
-          <official-account @load="loadOfficial"></official-account>
-        </view>
         <view class="info">
           <view class="name">关注公众号<text class="time">+3分钟</text></view>
           <view class="describe">新用户首次关注公众号可获得</view>
         </view>
-        <view
-          class="btn"
-          :class="{ disable: userInfo && userInfo.isConcern === 1 }"
-        >
+        <view class="btn"
+          @click="clickOfficial"
+          :class="{ disable: userInfo && userInfo.isConcern === 1 }">
           {{
             userInfo && userInfo.is_bind_wechat === 1 ? "已关注" : "去关注"
-          }}</view
-        >
+          }}</view>
       </view>
       <view class="task">
         <view class="info">
           <view class="name">邀请好友<text class="time">+3分钟/个</text></view>
           <view class="describe">新用户邀请好友注册可获得</view>
         </view>
-        <view class="btn" @click="openShare">去邀请</view>
+        <view class="btn"
+          @click="openShare">去邀请</view>
       </view>
 
       <view class="task">
@@ -47,11 +41,9 @@
           <view class="name">绑定微信<text class="time">+3分钟/个</text></view>
           <view class="describe">绑定微信帐号可获得</view>
         </view>
-        <view
-          class="btn"
+        <view class="btn"
           @click="openToastNone"
-          :class="{ disable: userInfo && userInfo.is_bind_wechat === 1 }"
-        >
+          :class="{ disable: userInfo && userInfo.is_bind_wechat === 1 }">
           {{ userInfo && userInfo.is_bind_wechat === 1 ? "已绑定" : "去授权" }}
         </view>
       </view>
@@ -80,17 +72,36 @@ export default {
   },
   mounted() {},
   computed: {
-    ...mapGetters(["userInfo"]),
+    ...mapGetters(["userInfo", "access_token"]),
   },
   methods: {
-    loadOfficial(res) {
-      console.log(res);
+    clickOfficial() {
+      if (this.userInfo && this.userInfo.isConcern === 1) {
+        return;
+      }
+      wx.previewMedia({
+        sources: [
+          {
+            url: "https://cdn.maxbox.com.cn/upload/images/icon-qr-img.png",
+            type: "image",
+          },
+        ],
+        showmenu: true,
+      });
     },
     openShare() {
+      if (!this.access_token) {
+        uni.navigateTo({ url: "/pages/login/index" });
+        return;
+      }
       this.$store.dispatch("setTaskPopup", false);
       uni.navigateTo({ url: "/pages/share/index" });
     },
     openToastNone() {
+      if (!this.access_token) {
+        uni.navigateTo({ url: "/pages/login/index" });
+        return;
+      }
       if (this.userInfo.is_bind_wechat === 1) {
         return;
       }

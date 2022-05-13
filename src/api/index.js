@@ -2,9 +2,12 @@
  * @ author Junr
  * @ use API地址
  */
-const HOST_IP = 'http://192.168.1.16:3000';
+const HOST_IP = 'https://conversion-api.maxbox.com.cn';
+// const HOST_IP = 'http://192.168.101.5:3000';
 // const HOST_IP = 'https://junr.mynatapp.cc';
 export default {
+  // 查询任务
+  taskQuery: HOST_IP + '/api/app/user/conversion/taskQuery',
   // 转写列表
   conversionList: HOST_IP + '/api/app/conversion/list',
   // 转写记录查询

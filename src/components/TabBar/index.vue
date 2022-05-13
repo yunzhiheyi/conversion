@@ -1,16 +1,12 @@
 <template>
   <view class="tab-bar">
-    <view
-      class="bar"
+    <view class="bar"
       v-for="(item, key) in barList"
       :key="key"
       :class="{ active: active === item.active }"
-      @click="tabClik(item, item.active)"
-    >
-      <image
-        class="icon"
-        :src="active === item.active ? item.iconActive : item.icon"
-      />
+      @click="tabClik(item, item.active)">
+      <image class="icon"
+        :src="active === item.active ? item.iconActive : item.icon" />
       <text class="name">{{ item.name }}</text>
     </view>
   </view>
@@ -26,22 +22,22 @@ export default {
     return {
       barList: [
         {
-          icon: "/static/icon-home.png",
-          iconActive: "/static/icon-home-active.png",
+          icon: "https://cdn.maxbox.com.cn/image/icon-home.png",
+          iconActive: "https://cdn.maxbox.com.cn/image/icon-home-active.png",
           name: "首页",
           path: "/pages/home/index",
           active: 1,
         },
         {
-          icon: "/static/icon-time.png",
-          iconActive: "/static/icon-time-active.png",
+          icon: "https://cdn.maxbox.com.cn/image/icon-time.png",
+          iconActive: "https://cdn.maxbox.com.cn/image/icon-time-active.png",
           name: "赚时长",
           path: "/pages/share/index",
           active: 2,
         },
         {
-          icon: "/static/icon-my.png",
-          iconActive: "/static/icon-my-active.png",
+          icon: "https://cdn.maxbox.com.cn/image/icon-my.png",
+          iconActive: "https://cdn.maxbox.com.cn/image/icon-my-active.png",
           name: "我的",
           path: "/pages/my/index",
           active: 3,
@@ -58,10 +54,6 @@ export default {
       if (index === 2) {
         this.$store.dispatch("setTaskPopup", true);
       } else {
-        if (!this.access_token && index === 3) {
-          uni.navigateTo({ url: "/pages/login/index" });
-          return;
-        }
         uni.switchTab({ url: item.path });
       }
     },

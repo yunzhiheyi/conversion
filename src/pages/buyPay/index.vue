@@ -1,63 +1,53 @@
 <template>
   <view class="page-content">
-    <swiper autoplay vertical class="buy-time-list">
+    <swiper autoplay
+      vertical
+      class="buy-time-list">
       <swiper-item class="item">
         <view class="item-text">
-          <image
-            class="image"
-            src="/static/icon-avatar-2.png"
-            mode="scaleToFill"
-          />
+          <image class="image"
+            src="https://cdn.maxbox.com.cn/image/icon-avatar-2.png"
+            mode="scaleToFill" />
           <text>172***2712刚刚购买了10分钟</text>
         </view>
       </swiper-item>
       <swiper-item class="item">
         <view class="item-text">
-          <image
-            class="image"
-            src="/static/icon-avatar-2.png"
-            mode="scaleToFill"
-          />
+          <image class="image"
+            src="https://cdn.maxbox.com.cn/image/icon-avatar-2.png"
+            mode="scaleToFill" />
           <text>182***1712刚刚购买了30分钟</text>
         </view>
       </swiper-item>
       <swiper-item class="item">
         <view class="item-text">
-          <image
-            class="image"
-            src="/static/icon-avatar-1.png"
-            mode="scaleToFill"
-          />
+          <image class="image"
+            src="https://cdn.maxbox.com.cn/image/icon-avatar-1.png"
+            mode="scaleToFill" />
           <text>189***1999刚刚购买了5小时</text>
         </view>
       </swiper-item>
       <swiper-item class="item">
         <view class="item-text">
-          <image
-            class="image"
-            src="/static/icon-avatar.png"
-            mode="scaleToFill"
-          />
+          <image class="image"
+            src="https://cdn.maxbox.com.cn/image/icon-avatar.png"
+            mode="scaleToFill" />
           <text>172***3115刚刚购买了10分钟</text>
         </view>
       </swiper-item>
       <swiper-item class="item">
         <view class="item-text">
-          <image
-            class="image"
-            src="/static/icon-avatar-1.png"
-            mode="scaleToFill"
-          />
+          <image class="image"
+            src="https://cdn.maxbox.com.cn/image/icon-avatar-1.png"
+            mode="scaleToFill" />
           <text>134***1585刚刚购买了10小时</text>
         </view>
       </swiper-item>
       <swiper-item class="item">
         <view class="item-text">
-          <image
-            class="image"
-            src="/static/icon-avatar.png"
-            mode="scaleToFill"
-          />
+          <image class="image"
+            src="https://cdn.maxbox.com.cn/image/icon-avatar.png"
+            mode="scaleToFill" />
           <text>138***2215刚刚购买了24小时</text>
         </view>
       </swiper-item>
@@ -70,19 +60,21 @@
         }}</text>
       </view>
       <view class="buy-paytime-list">
-        <template v-for="(item, index) in priceList" :key="index">
-          <view class="time" @click="clickBuy(item, index + 1)">
-            <van-skeleton
-              class="paytime-flex"
+        <template v-for="(item, index) in priceList"
+          :key="index">
+          <view class="time"
+            @click="clickBuy(item, index + 1)">
+            <van-skeleton class="paytime-flex"
               row="1"
               :row-width="['100%']"
-              :loading="!item.payment_price"
-            >
-              <view class="flex" :class="{ active: isActive === index + 1 }">
+              :loading="!item.payment_price">
+              <view class="flex"
+                :class="{ active: isActive === index + 1 }">
                 <view class="price">{{ item.payment_price / 100 }}</view>
                 <view class="info">{{ item.name }}</view>
               </view>
-              <view class="recommended" v-if="item.isRecommended">推荐</view>
+              <view class="recommended"
+                v-if="item.isRecommended">推荐</view>
             </van-skeleton>
           </view>
         </template>
@@ -91,14 +83,11 @@
     <view class="instructions-info">
       <view class="b">购买说明: </view>
       <view class="p">1.购买时长不会过期，用完即止</view>
-      <view class="p"
-        >2.转换准确度与语音效果有关，虚拟服务购买后恕不能退款</view
-      >
+      <view class="p">2.转换准确度与语音效果有关，虚拟服务购买后恕不能退款</view>
       <view class="p">3.如需要发票，可在购买后添加客服微信开具</view>
     </view>
-    <view class="buy-botton" @click="submitOrder"
-      >确认支付 ￥{{ payment_price }}</view
-    >
+    <view class="buy-botton"
+      @click="submitOrder">确认支付 ￥{{ payment_price }}</view>
   </view>
   <van-toast class="van-toast" />
   <van-notify class="van-notify" />

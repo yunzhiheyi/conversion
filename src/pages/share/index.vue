@@ -1,64 +1,60 @@
 <template>
   <view class="page-content">
-    <view class="nav-bar" :style="'padding-top:' + safeArea.top + 'px'">
-      <van-icon
-        name="arrow-left"
+    <view class="nav-bar"
+      :style="'padding-top:' + safeArea.top + 'px'">
+      <van-icon name="arrow-left"
         @click="onClickLeft"
         class="arrow-left"
-        size="40rpx"
-      />
+        size="40rpx" />
       <view class="van-nav-bar__title van-ellipsis">邀请好友</view>
     </view>
     <!-- <van-nav-bar title="标题" left-arrow @click-left="onClickLeft" /> -->
-    <image class="bg" src="/static/icon-share-bg.png" mode="scaleToFill" />
-    <image
-      class="envelope"
-      src="/static/icon-envelope.png"
-      mode="scaleToFill"
-    />
+    <image class="bg"
+      src="https://cdn.maxbox.com.cn/image/icon-share-bg.png"
+      mode="scaleToFill" />
+    <image class="envelope"
+      src="https://cdn.maxbox.com.cn/image/icon-envelope.png"
+      mode="scaleToFill" />
     <view class="share-btn">
-      <button open-type="share" class="contact">立即邀请 领时长</button>
+      <button open-type="share"
+        class="contact">立即邀请 领时长</button>
     </view>
     <view class="steps bk">
-      <view class="name"
-        ><text class="title"><text class="_t">邀请步骤</text></text></view
-      >
+      <view class="name"><text class="title"><text class="_t">邀请步骤</text></text></view>
       <view class="steps-view">
         <view class="_view">
           <text class="steps_type"><text class="_type">1</text></text>
-          <view class="text"><view class="_w">分享活动给好友</view></view>
+          <view class="text">
+            <view class="_w">分享活动给好友</view>
+          </view>
         </view>
         <view class="_view">
           <text class="steps_type"><text class="_type">2</text></text>
-          <view class="text"><view class="_w">好友注册使用</view></view>
+          <view class="text">
+            <view class="_w">好友注册使用</view>
+          </view>
           <view class="line"></view>
         </view>
         <view class="_view">
           <text class="steps_type"><text class="_type">3</text></text>
-          <view class="text"><view class="_w">获取对应时长</view></view>
+          <view class="text">
+            <view class="_w">获取对应时长</view>
+          </view>
         </view>
       </view>
     </view>
     <view class="invitedRecord bk">
-      <view class="name"
-        ><text class="title"><text class="_t">我的邀请记录</text></text></view
-      >
+      <view class="name"><text class="title"><text class="_t">我的邀请记录</text></text></view>
       <view class="record">
         <view class="_view">
           <text class="text">已成功邀请</text>
-          <view class="_num"
-            ><text class="_red">{{ dataRecord && dataRecord.count }}</text
-            >人</view
-          >
+          <view class="_num"><text class="_red">{{ dataRecord && dataRecord.count }}</text>人</view>
         </view>
         <view class="_view">
           <text class="text">已获得奖励</text>
-          <view class="_num"
-            ><text class="_red">{{
+          <view class="_num"><text class="_red">{{
               dataRecord && dataRecord.timeCount / 60
-            }}</text
-            >分钟</view
-          >
+            }}</text>分钟</view>
         </view>
       </view>
     </view>
@@ -87,6 +83,14 @@ export default {
     this.dataRecord = data;
   },
   onShareAppMessage(res) {
+    return {
+      title:
+        "语音转换精灵，基于AI语音识别，在线识别视频、语音，轻松转换文字脚本",
+      path: "/pages/home/index?inviter_code=" + this.userInfo.inviter_code,
+      imageUrl: "https://cdn.maxbox.com.cn/upload/images/share.png",
+    };
+  },
+  onShareTimeline(res) {
     return {
       title:
         "语音转换精灵，基于AI语音识别，在线识别视频、语音，轻松转换文字脚本",

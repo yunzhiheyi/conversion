@@ -2,116 +2,109 @@
   <view class="page-content user">
     <view :style="'height:' + safeAreaTop + 'px'"></view>
     <view class="my-user-info">
+      <view class="user-bg"></view>
       <view class="avatar">
-        <image
-          class="image"
+        <image class="image"
           @click="openLogin"
           :src="
             userInfo && userInfo.avatar
               ? userInfo.avatar
-              : '/static/icon-avatar.png'
+              : 'https://cdn.maxbox.com.cn/image/icon-avatar.png'
           "
-          mode="scaleToFill"
-        />
+          mode="scaleToFill" />
         <view class="info">
-          <text class="nickName" v-if="userInfo && userInfo.mobile">{{
-            userInfo.nickname
-          }}</text>
-          <view class="mobile" v-if="userInfo && userInfo.mobile">{{
-            phoneFilter(userInfo.mobile)
-          }}</view>
-          <view
-            class="login-btn"
+          <view class="info_flex">
+            <text class="nickName"
+              v-if="userInfo && userInfo.nickname">{{
+              userInfo.nickname
+            }}</text>
+            <view class="mobile"
+              v-if="userInfo && userInfo.mobile">{{
+              phoneFilter(userInfo.mobile)
+            }}</view>
+          </view>
+          <view class="login-btn"
             v-if="!userInfo && !userInfo.mobile"
-            @click="onLogin"
-            >登录/注册</view
-          >
+            @click="onLogin">登录/注册</view>
         </view>
       </view>
     </view>
-    <view class="my-user-time" v-if="userInfo && userInfo.mobile">
+    <view class="my-user-time"
+      v-if="userInfo && userInfo.remaining_time">
       <view class="available-time">
         <text class="name">可用时长: </text>
-        <text class="b" @click="timeRecord">{{
+        <text class="b"
+          @click="goLink('timeRecord')">{{
           $tools.formatSeconds(userInfo.remaining_time)
         }}</text>
       </view>
-      <text class="buy-time" @click="buyPay">购买时长</text>
+      <text class="buy-time"
+        @click="goLink('buyPay')">购买时长</text>
     </view>
     <view class="my-list">
-      <view class="list van-hairline--bottom" @click="goOrder">
-        <image
-          src="/static/icon-my-order.png"
+      <view class="list van-hairline--bottom"
+        @click="goLink('order')">
+        <image src="https://cdn.maxbox.com.cn/image/icon-my-order.png"
           class="image"
-          mode="scaleToFill"
-        />
+          mode="scaleToFill" />
         <view class="text">我的订单</view>
         <view class="arrow"></view>
       </view>
-      <view class="list van-hairline--bottom" @click="buyPay">
-        <image
-          src="/static/icon-my-topup.png"
+      <view class="list van-hairline--bottom"
+        @click="goLink('buyPay')">
+        <image src="https://cdn.maxbox.com.cn/image/icon-my-topup.png"
           class="image"
-          mode="scaleToFill"
-        />
+          mode="scaleToFill" />
         <view class="text">时长充值</view>
         <view class="arrow"></view>
       </view>
-      <view class="list van-hairline--bottom" @click="goConversionRecord">
-        <image
-          src="/static/icon-my-record.png"
+      <view class="list van-hairline--bottom"
+        @click="goLink('conversionRecord')">
+        <image src="https://cdn.maxbox.com.cn/image/icon-my-record.png"
           class="image"
-          mode="scaleToFill"
-        />
+          mode="scaleToFill" />
         <view class="text">转换记录</view>
         <view class="arrow"></view>
       </view>
       <view class="list van-hairline--bottom">
-        <image
-          src="/static/icon-my-help.png"
+        <image src="https://cdn.maxbox.com.cn/image/icon-my-help.png"
           class="image"
-          mode="scaleToFill"
-        />
-        <view class="text"
-          ><button
-            open-type="contact"
+          mode="scaleToFill" />
+        <view class="text"><button open-type="contact"
             class="contact"
             send-message-path="/pages/my/index"
             send-message-title="测试发送信息"
-            @contact="handleContact"
-          >
+            @contact="handleContact">
             帮助客服
-          </button></view
-        >
+          </button></view>
         <view class="arrow"></view>
       </view>
-      <view class="list van-hairline--bottom" @click="openNotify">
+      <!-- <view class="list van-hairline--bottom" @click="openNotify">
         <image
-          src="/static/icon-my-wechat.png"
+          src="https://cdn.maxbox.com.cn/image/icon-my-wechat.png"
           class="image"
           mode="scaleToFill"
         />
         <view class="text">关注公众号</view>
         <text class="_info">关注送时长</text>
         <view class="arrow"></view>
-      </view>
+      </view> -->
     </view>
   </view>
-  <tab-bar class="tab-bar-fixed" :active="3"></tab-bar>
+  <tab-bar class="tab-bar-fixed"
+    :active="3"></tab-bar>
   <van-notify class="van-notify" />
-  <home-share-popup
-    :show="isShowPopup"
+  <home-share-popup :show="isShowPopup"
     v-if="isShowPopup"
     :top="500"
-    @click="goShare"
-  >
-    <image
-      class="share-image"
-      src="/static/icon-share-side.png"
-      mode="scaleToFill"
-    />
+    @click="goLink('share')">
+    <image class="share-image"
+      src="https://cdn.maxbox.com.cn/image/icon-share-side.png"
+      mode="scaleToFill" />
   </home-share-popup>
-  <task-pupup :show="isTaskPopup" v-if="isTaskPopup" @close="onCloseTask" />
+  <task-pupup :show="isTaskPopup"
+    v-if="isTaskPopup"
+    @close="onCloseTask" />
   <van-toast class="van-toast" />
 </template>
 <script>
@@ -126,11 +119,12 @@ export default {
       isActive: 3,
       isShowPopup: true,
       isQrcode: false,
+      isIos: systemInfo.system.indexOf("iOS") > -1,
       safeAreaTop: systemInfo.safeAreaInsets.top,
     };
   },
   computed: {
-    ...mapGetters(["isTaskPopup", "userInfo"]),
+    ...mapGetters(["isTaskPopup", "userInfo", "access_token"]),
   },
   components: {
     TabBar,
@@ -139,7 +133,7 @@ export default {
   },
   onLoad() {},
   onShow() {
-    this.getUserInfo();
+    this.access_token && this.getUserInfo();
   },
   methods: {
     handleContact(e) {
@@ -166,7 +160,7 @@ export default {
         return _val.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
       }
     },
-    // 刷新用户信息1
+    // 刷新用户信息
     async getUserInfo() {
       var userInfo = await this.$api.getUserInfo({ isLoading: true });
       this.$store.dispatch("setUserInfo", userInfo.data);
@@ -177,23 +171,23 @@ export default {
     onCloseTask() {
       this.$store.dispatch("setTaskPopup", false);
     },
-    goShare() {
-      uni.navigateTo({ url: "/pages/share/index" });
-    },
-    buyPay() {
-      uni.navigateTo({ url: "/pages/buyPay/index" });
-    },
     openLogin() {
       uni.navigateTo({ url: "/pages/login/index" });
     },
-    timeRecord() {
-      uni.navigateTo({ url: "/pages/timeRecord/index" });
-    },
-    goOrder() {
-      uni.navigateTo({ url: "/pages/order/index" });
-    },
-    goConversionRecord() {
-      uni.navigateTo({ url: "/pages/conversionRecord/index" });
+    goLink(path) {
+      if (!this.access_token) {
+        uni.navigateTo({ url: "/pages/login/index" });
+        return;
+      }
+      if (path === "buyPay" && this.isIos && this.userInfo.offonState === "1") {
+        this.$toast({
+          type: "info",
+          selector: ".van-toast",
+          message: "根据相关规范，IOS暂不支持充值",
+        });
+        return;
+      }
+      uni.navigateTo({ url: "/pages/" + path + "/index" });
     },
   },
 };
@@ -225,9 +219,7 @@ page {
     position: relative;
     z-index: 99;
     margin: 100rpx 36rpx 20rpx;
-    &::after {
-      content: "";
-      display: block;
+    .user-bg {
       position: absolute;
       top: -200rpx;
       bottom: -154rpx;
@@ -256,6 +248,8 @@ page {
         flex: 1;
         margin-top: 5rpx;
         margin-left: 24rpx;
+        display: flex;
+        align-items: center;
         color: #fff;
         .nickName {
           font-size: 34rpx;
@@ -309,7 +303,7 @@ page {
           right: -32rpx;
           width: 28rpx;
           height: 28rpx;
-          background-image: url("/static/icon-arrow-right.png");
+          background-image: url("https://cdn.maxbox.com.cn/image/icon-arrow-right.png");
           background-repeat: no-repeat;
           background-size: contain;
         }
@@ -340,7 +334,7 @@ page {
       .arrow {
         width: 28rpx;
         height: 28rpx;
-        background-image: url("/static/icon-arrow-right.png");
+        background-image: url("https://cdn.maxbox.com.cn/image/icon-arrow-right.png");
         background-repeat: no-repeat;
         background-size: contain;
       }

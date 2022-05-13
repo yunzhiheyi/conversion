@@ -2,38 +2,32 @@
   <view class="page-content">
     <view class="content">
       <view class="logo-view">
-        <image class="_logo" src="/static/icon-logo.png" mode="scaleToFill" />
+        <image class="_logo"
+          src="https://cdn.maxbox.com.cn/image/icon-logo.png"
+          mode="scaleToFill" />
         <view>语音转换精灵</view>
       </view>
       <view class="wechat-auth-btn">
-        <button
-          class="wechat-btn"
-          open-type="getPhoneNumber"
-          @getphonenumber="getPhoneNumber"
-        >
-          微信授权手机登录
-        </button>
-        <view
-          v-if="!isCheckedBtn"
+        <button class="wechat-btn"
+          @click="wechatLogin">微信授权登录</button>
+        <view v-if="!isCheckedBtn"
           @click="onChecked"
-          class="wechat-view"
-        ></view>
+          class="wechat-view"></view>
       </view>
-      <view class="mobile-btn" @click="onLoginCode">手机登录/注册</view>
+      <view class="mobile-btn"
+        @click="onLoginCode">手机登录/注册</view>
       <view class="privacy">
-        <view
-          class="checked"
+        <view class="checked"
           :class="{ animation: !checked && isChecked }"
-          v-if="!checked && isChecked"
-          >请先勾选同意</view
-        >
-        <van-checkbox :value="checked" icon-size="28rpx" @change="onChange"
-          ><text class="_text">已阅读并同意</text></van-checkbox
-        ><text class="__text"
-          ><text class="_btn">用户协议</text>和<text class="_btn"
-            >隐私政策</text
-          ></text
-        >
+          v-if="!checked && isChecked">请先勾选同意</view>
+        <van-checkbox :value="checked"
+          icon-size="28rpx"
+          @change="onChange"><text class="_text">已阅读并同意</text></van-checkbox>
+        <view class="__text">
+          <view class="_btn"
+            @click="goWebview(1)">用户协议</view>和<view class="_btn"
+            @click="goWebview(2)">隐私政策</view>
+        </view>
       </view>
     </view>
   </view>
@@ -42,10 +36,12 @@
 <script>
 import TabBar from "../../components/TabBar/index.vue";
 import { mapGetters } from "vuex";
+const systemInfo = uni.getSystemInfoSync();
 export default {
   data() {
     return {
       checkbox: 1,
+      isLoading: false,
       checked: false,
       isChecked: false,
       isCheckedBtn: false,
@@ -67,8 +63,66 @@ export default {
     onLoginCode() {
       uni.navigateTo({ url: "/pages/loginCode/index" });
     },
+    wechatLogin() {
+      wx.showLoading({ title: "正在打开授权中", mask: true });
+      wx.getUserProfile({
+        desc: "用于会员登录授权", // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+        success: (_res) => {
+          this.isLoading = false;
+          wx.hideLoading();
+          wx.login({
+            success: (data) => {
+              var logincode = data.code;
+              // 根据小程序Code获取真正的手机号
+              this.$api
+                .wechatAuth({
+                  logincode,
+                  avatarUrl: _res.userInfo.avatarUrl,
+                  nickName: _res.userInfo.nickName,
+                  inviter_code: this.inviter_code,
+                  systemType: systemInfo.platform,
+                })
+                .then((res) => {
+                  console.log(res.data);
+                  if (res) {
+                    this.$store.dispatch("setUserInfo", res.data.userInfo);
+                    this.$store.dispatch(
+                      "setAccessToken",
+                      res.data.access_token
+                    );
+                    this.$store.dispatch(
+                      "setRefreshToken",
+                      res.data.refresh_token
+                    );
+                    wx.navigateBack({
+                      delta: 1,
+                    });
+                  }
+                });
+            },
+          });
+        },
+        fail: (err) => {
+          this.isLoading = false;
+          wx.hideLoading();
+          this.$toast({
+            type: "fail",
+            selector: ".van-toast",
+            message: "拒绝授权登录无法享受我们的服务",
+          });
+        },
+      });
+    },
     getPhoneNumber(res) {
       const phonecode = res.detail.code; // IDE是获取不到CODE的，真机可以1
+      if (!phonecode) {
+        this.$toast({
+          type: "fail",
+          selector: ".van-toast",
+          message: "你拒绝授权手登录",
+        });
+        return;
+      }
       wx.login({
         success: (data) => {
           var logincode = data.code;
@@ -78,6 +132,7 @@ export default {
               phonecode,
               logincode,
               inviter_code: this.inviter_code,
+              systemType: systemInfo.platform,
             })
             .then((res) => {
               if (res) {
@@ -91,6 +146,9 @@ export default {
             });
         },
       });
+    },
+    goWebview(type) {
+      uni.navigateTo({ url: "/pages/webview/index?type=" + type });
     },
     onChecked() {
       if (!this.checked) {
@@ -203,9 +261,11 @@ page {
     .__text {
       font-size: 28rpx;
       color: #999;
+      display: inline-block;
       ._btn {
         color: #4879f6;
         padding: 0 2rpx;
+        display: inline-block;
         text-decoration: underline;
       }
     }
