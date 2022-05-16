@@ -110,6 +110,10 @@ class apiController {
   async getRecordList(data) {
     return await this.request(apiPath.recordList, data);
   }
+  // 新建转写任务
+  async taskCreate(data) {
+    return await this.request(apiPath.taskCreate, data, 'POST');
+  }
   // 订单列表
   async getOrderList(data) {
     return await this.request(apiPath.orderList, data);

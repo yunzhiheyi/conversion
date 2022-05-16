@@ -54,7 +54,7 @@
           @click="taskQuery(item)">查看结果</view>
         <view class="resubmit"
           v-if="item.taskStatus === 2"
-          @click="resubmitChange(item)">重新转换</view>
+          @click="resubmitChange(item,index)">重新转换</view>
       </view>
     </view>
   </template>
@@ -113,7 +113,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "access_token"]),
+    ...mapGetters(["userInfo", "access_token", "taskState"]),
   },
   props: {
     isShow: {
@@ -126,6 +126,13 @@ export default {
     },
     taskStatus: {
       type: Number,
+    },
+  },
+  watch: {
+    taskState: function (newVlue, oldValue) {
+      if (newVlue) {
+        this.conversionList();
+      }
     },
   },
   onLoad() {},
@@ -142,12 +149,21 @@ export default {
         options.taskStatus = this.taskStatus;
       }
       const { data } = await this.$api.conversionList(options);
-      this.dataList = data.result;
+      if (data) {
+        this.dataList = data.result;
+        // 首页更新记录清除标识
+        this.taskState && this.$store.dispatch("setTaskState", false);
+      }
     },
     async taskQuery(item) {
-      var options = {
-        taskId: item.taskId,
-      };
+      var options = {};
+      if (item.taskId) {
+        options.taskId = item.taskId;
+      } else {
+        this.conversionList();
+        return;
+      }
+
       const { data } = await this.$api.taskQuery(options);
       if (data) {
         if (data.StatusStr === "success") {
@@ -212,25 +228,21 @@ export default {
       }, 100);
     },
     // 重新转换
-    async resubmitChange(item) {
+    async resubmitChange(item, index) {
       if (this.userInfo.remaining_time < item.metaInfo.duration) {
         this.popText = "当前时长不足，无法转当前视频，请立即充值";
         this.isPopupShow = true;
         this.$toast.clear();
         return;
       }
-      this.isUpdataShow = true;
-      this.conversion_progress();
-      var res = await this.$api.conversionRecordResubmit({ id: item._id });
+      this.dataList[index].taskStatus = 1;
+      var res = await this.$api.conversionRecordResubmit({
+        id: item._id,
+        isLoading: true,
+      });
       if (res.data === 1) {
         this.conversionList();
         this.progress = 100;
-        setTimeout(() => {
-          this.progress = 0;
-          this.isUpdataShow = false;
-        }, 300);
-      }
-      if (res.data === 1) {
       }
     },
     onClickClose() {},

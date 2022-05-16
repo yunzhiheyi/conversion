@@ -147,7 +147,7 @@
   <home-share-popup :show="isShowPopup"
     :top="600"
     @click="isTaskShow = true">
-    <view class="taskListBtn">任务池</view>
+    <view class="taskListBtn"></view>
   </home-share-popup>
 
   <!-- <web-view src="https://conversion-api.maxbox.com.cn/upload.html"></web-view> -->
@@ -161,7 +161,7 @@
     @close="onCloseTaskPopup">
     <view class="conversion-popup">
       <view class="conversion-popup-title">
-        <view class="name">大文件任务池</view>
+        <view class="name">转换记录</view>
         <view class="close"
           @click="onCloseTaskPopup">
           <van-icon name="clear"
@@ -170,10 +170,9 @@
         </view>
       </view>
       <view class="conversion-popup-list">
-        <view class="tis">备注：超过30分钟以上的音频会排队识别</view>
+        <view class="tis">备注：大文件转写过程中时间略长，请勿频繁查询结果</view>
         <record-list v-if="isTaskShow"
-          :isShow="isTaskShow"
-          :taskStatus="1" />
+          :isShow="isTaskShow" />
       </view>
     </view>
   </van-popup>
@@ -273,7 +272,7 @@ export default {
     }
     uni.getClipboardData({
       success: (res) => {
-        // console.log(res);
+        console.log(res);
         // android才隐藏
         // uni.getSystemInfoSync().platform == "android" && uni.hideToast(); // 微信原生有弹一个成功Toast
         uni.hideToast();
@@ -415,6 +414,13 @@ export default {
     },
     onClose() {
       this.isShow = false;
+    },
+    // 新建转写任务
+    async taskCreate(_id) {
+      var data = await this.$api.taskCreate({ id: _id, isLoading: true });
+      if (data) {
+        this.$store.dispatch("setTaskState", true);
+      }
     },
     clickClose() {},
     clickOverlay() {
@@ -588,8 +594,9 @@ export default {
       });
 
       uploader.on("success", (res) => {
+        this.$toast.clear();
         this.progress = 100;
-        this.isConversion = true;
+        // this.isConversion = true;
         if (res.data) {
           this.getUserInfo(); // 刷新用户信息
           clearInterval(this.clearInt);
@@ -597,21 +604,15 @@ export default {
         clearInterval(this.clearInt);
         setTimeout(() => {
           this.isUpdataShow = false;
-          if (res.data && !res.isTask) {
-            uni.navigateTo({
-              url: "/pages/conversionComplete/index?id=" + res.id,
-            });
-          } else {
-            // 时长不足
-            if (res.sCode === 2) {
-              this.popText = "时长不足，转写失败,充值后可在转写记录重新提交.";
-              this.isPopupShow = true;
-            }
-            if (res.isTask) {
-              this.isTaskShow = true;
-            }
-            this.$toast.clear();
+          // 时长不足
+          if (res.sCode === 2) {
+            this.popText = "时长不足，转写失败,充值后可在转写记录重新提交.";
+            this.isPopupShow = true;
+            return;
           }
+          this.isTaskShow = true;
+          // 开始转写任务
+          this.taskCreate(res.id);
         }, 200);
         console.log("upload success", res);
       });
@@ -636,8 +637,14 @@ export default {
         setTimeout(() => {
           if (this.progress === 100) {
             this.progress = 0;
-            this.isConversion = true;
-            this.conversion_progress(); // 转换进度条开始
+            this.isUpdataShow = false;
+            this.$toast({
+              type: "loading",
+              selector: ".van-toast",
+              duration: 0,
+              message: "转换中",
+            });
+            // this.conversion_progress(); // 转换进度条开始
           }
         }, 300);
       });
@@ -812,9 +819,17 @@ page {
 .taskListBtn {
   background-color: #5f88f1;
   font-size: 28rpx;
-  padding: 15rpx 0;
+  width: 80rpx;
+  height: 80rpx;
+  position: absolute;
+  right: 10rpx;
+  top: 0;
   text-align: center;
   color: #fff;
-  border-radius: 40rpx 0 0 40rpx;
+  border-radius: 40rpx;
+  background-image: url("https://cdn.maxbox.com.cn/image/exchange.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 50rpx 50rpx;
 }
 </style>
