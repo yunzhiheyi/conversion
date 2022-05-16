@@ -39,10 +39,12 @@
         }}</text>
       </view>
       <text class="buy-time"
+        v-if="!isIos"
         @click="goLink('buyPay')">购买时长</text>
     </view>
     <view class="my-list">
       <view class="list van-hairline--bottom"
+        v-if="!isIos"
         @click="goLink('order')">
         <image src="https://cdn.maxbox.com.cn/image/icon-my-order.png"
           class="image"
@@ -51,6 +53,7 @@
         <view class="arrow"></view>
       </view>
       <view class="list van-hairline--bottom"
+        v-if="!isIos"
         @click="goLink('buyPay')">
         <image src="https://cdn.maxbox.com.cn/image/icon-my-topup.png"
           class="image"
@@ -179,14 +182,14 @@ export default {
         uni.navigateTo({ url: "/pages/login/index" });
         return;
       }
-      if (path === "buyPay" && this.isIos && this.userInfo.offonState === "1") {
-        this.$toast({
-          type: "info",
-          selector: ".van-toast",
-          message: "根据相关规范，IOS暂不支持充值",
-        });
-        return;
-      }
+      // if (path === "buyPay" && this.isIos && this.userInfo.offonState === "1") {
+      //   this.$toast({
+      //     type: "info",
+      //     selector: ".van-toast",
+      //     message: "根据相关规范，IOS暂不支持充值",
+      //   });
+      //   return;
+      // }
       uni.navigateTo({ url: "/pages/" + path + "/index" });
     },
   },
