@@ -113,7 +113,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userInfo", "access_token", "taskState"]),
+    ...mapGetters(["userInfo", "access_token", "taskState", "taskShow"]),
   },
   props: {
     isShow: {
@@ -141,7 +141,7 @@ export default {
     this.isShow && this.conversionList();
   },
   methods: {
-    async conversionList() {
+    async conversionList(callback) {
       var options = {
         current: 1,
       };
@@ -151,6 +151,7 @@ export default {
       const { data } = await this.$api.conversionList(options);
       if (data) {
         this.dataList = data.result;
+        callback && callback();
         // 首页更新记录清除标识
         this.taskState && this.$store.dispatch("setTaskState", false);
       }
@@ -227,6 +228,24 @@ export default {
         }
       }, 100);
     },
+    // 新建转写任务
+    async taskCreate(_id) {
+      const { data } = await this.$api.taskCreate({ id: _id, isLoading: true });
+      if (data) {
+        this.conversionList();
+        this.progress = 100;
+      }
+    },
+    // 音频转写
+    async taskAudioCreate(_id) {
+      const { data } = await this.$api.taskAudioCreate({
+        id: _id,
+        isLoading: true,
+      });
+      if (data) {
+        this.taskCreate(_id);
+      }
+    },
     // 重新转换
     async resubmitChange(item, index) {
       if (this.userInfo.remaining_time < item.metaInfo.duration) {
@@ -236,14 +255,7 @@ export default {
         return;
       }
       this.dataList[index].taskStatus = 1;
-      var res = await this.$api.conversionRecordResubmit({
-        id: item._id,
-        isLoading: true,
-      });
-      if (res.data === 1) {
-        this.conversionList();
-        this.progress = 100;
-      }
+      this.taskAudioCreate(item._id);
     },
     onClickClose() {},
     goConversionComplete(item) {
@@ -274,7 +286,7 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis; //文本溢出显示省略号
       white-space: nowrap; //文本不会换行
-      padding-right: 80rpx;
+      padding-right: 100rpx;
     }
     .time {
       margin: 12rpx 0;

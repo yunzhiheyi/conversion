@@ -5,10 +5,12 @@ const SET_REFRESH_TOKEN = 'SET_REFRESH_TOKEN';
 const SET_ACCESS_TOKEN = 'SET_ACCESS_TOKEN';
 const SET_INVITER_CODE = 'SET_INVITER_CODE';
 const SET_TASK_STATES = 'SET_TASK_STATES';
+const SET_TASK_SHOW = 'SET_TASK_SHOW';
 export default createStore({
   state: {
     isTaskPopup: false,
     taskState: false,
+    taskShow: false,
     access_token: uni.getStorageSync('access_token'),
     refresh_token: uni.getStorageSync('refresh_token'),
     userInfo: uni.getStorageSync('userInfo'),
@@ -22,6 +24,10 @@ export default createStore({
     // 进行数据更新，改变数据状态
     [SET_TASK_STATES](state, data) {
       state.taskState = data;
+    },
+    // 进行数据更新，改变数据状态
+    [SET_TASK_SHOW](state, data) {
+      state.taskShow = data;
     },
     // 获取邀请码
     [SET_INVITER_CODE](state, data) {
@@ -47,6 +53,9 @@ export default createStore({
     setTaskState({ commit }, data) {
       commit(SET_TASK_STATES, data);
     },
+    setTaskShow({ commit }, data) {
+      commit(SET_TASK_SHOW, data);
+    },
     setInviterCode({ commit }, data) {
       uni.setStorageSync('inviter_code', data);
       commit(SET_INVITER_CODE, data);
@@ -68,6 +77,7 @@ export default createStore({
     isTaskPopup: (state) => state.isTaskPopup,
     userInfo: (state) => state.userInfo,
     taskState: (state) => state.taskState,
+    taskShow: (state) => state.taskShow,
     inviter_code: (state) => state.inviter_code,
     access_token: (state) => state.access_token,
     refresh_token: (state) => state.refresh_token,

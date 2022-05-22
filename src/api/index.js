@@ -2,8 +2,8 @@
  * @ author Junr
  * @ use API地址
  */
-// const HOST_IP = 'https://conversion-api.maxbox.com.cn';
-const HOST_IP = 'http://192.168.101.7:3000';
+const HOST_IP = 'https://conversion-api.maxbox.com.cn';
+// const HOST_IP = 'http://192.168.101.6:3000';
 // const HOST_IP = 'https://junr.mynatapp.cc';
 export default {
   // 查询任务
@@ -12,12 +12,12 @@ export default {
   conversionList: HOST_IP + '/api/app/conversion/list',
   // 新建转写任务
   taskCreate: HOST_IP + '/api/app/user/conversion/taskCreate',
+  // 新建音频转写任务
+  taskAudioCreate: HOST_IP + '/api/app/user/conversion/taskAudioCreate',
   // 转写记录查询
   conversionRecordQuery: HOST_IP + '/api/app/conversion/query',
   // 转写记录删除
   conversionRecordDelete: HOST_IP + '/api/app/conversion/delete',
-  // 重新提交转写
-  conversionRecordResubmit: HOST_IP + '/api/app/conversion/resubmit',
   // 在线提取
   conversionRecordParse: HOST_IP + '/api/app/conversion/parse',
   // 生成文档

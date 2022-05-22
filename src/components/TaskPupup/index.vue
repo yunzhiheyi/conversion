@@ -15,7 +15,7 @@
         color="#ffffff"
         size="50rpx"
         @click="onCloseTask" />
-      <view class="task">
+      <!-- <view class="task">
         <view class="info">
           <view class="name">关注公众号<text class="time">+3分钟</text></view>
           <view class="describe">新用户首次关注公众号可获得</view>
@@ -26,7 +26,7 @@
           {{
             userInfo && userInfo.is_bind_wechat === 1 ? "已关注" : "去关注"
           }}</view>
-      </view>
+      </view> -->
       <view class="task">
         <view class="info">
           <view class="name">邀请好友<text class="time">+3分钟/个</text></view>

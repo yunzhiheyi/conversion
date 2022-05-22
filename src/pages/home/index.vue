@@ -64,8 +64,7 @@
       <view class="b"
         @click="clickClose">说明: </view>
       <view class="p">
-        ·支持mp3, m4a, wav, amr, aac, mp4, mov,
-        flac,opus等音视频格式、时长2小时以内、大小100MB以内的文件。</view>
+        ·支持wav,ogg-opus,speex,silk,m4a,aac,mp3,mp4等音视频格式、时长2小时以内、大小100MB以内的文件。</view>
       <view class="p">·音视频时长至少大于10秒钟。</view>
       <view class="p">·未支持格式可联系客服。</view>
     </view>
@@ -131,7 +130,10 @@
       <view class="action-title">{{
         !isConversion ? "正在上传" : "正在转换中"
       }}</view>
-      <view class="action-content"><text v-if="!isConversion">预计还剩<text v-if="progress > 0">{{ timeRemaining }}</text>分钟，请耐心等待</text><text v-else>{{ timeRemainText }}</text></view>
+      <view class="action-content">
+        <view v-if="!isConversion">正在努力上传中，请耐心等待
+        </view>
+      </view>
       <view class="progress">
         <view class="flex-progress">
           <van-progress :percentage="progress"
@@ -170,7 +172,7 @@
         </view>
       </view>
       <view class="conversion-popup-list">
-        <view class="tis">备注：大文件转写过程中时间略长，请勿频繁查询结果</view>
+        <view class="tis">备注：大文件转换过程中时间略长，请勿频繁查询结果</view>
         <record-list v-if="isTaskShow"
           :isShow="isTaskShow" />
       </view>
@@ -196,10 +198,7 @@ export default {
       isPopupParse: false,
       ParseUrl: "",
       timeRemainText: "正在加速转换文字，请耐心等待",
-      uploadedSize: 0,
       safeAreaTop: systemInfo.safeAreaInsets.top,
-      averageSpeed: 0,
-      timeRemaining: 0,
       testChunks: false,
       isActive: 1,
       isShow: false,
@@ -214,7 +213,17 @@ export default {
       popText: "",
       rewardedVideoAd: null,
       inviter_code: "",
-      format: ["mp3", "m4a", "wav", "amr", "aac", "mp4", "mov"],
+      format: [
+        "mp3",
+        "m4a",
+        "wav",
+        "aac",
+        "mp4",
+        "wav",
+        "ogg-opus",
+        "speex",
+        "silk",
+      ],
       toastText: [
         "大文件转写速度有点慢，耐心等待下",
         "我不是卡了，我还是在努力识别",
@@ -327,7 +336,7 @@ export default {
       }
       this.$toast({
         type: "info",
-        selector: ".van-toast",
+        selector: "#van-toast",
         message: "复制视频分享地址会自动识别解析",
       });
     },
@@ -364,9 +373,13 @@ export default {
           if (res.data) {
             this.ParseUrl = "";
             this.progress = 100;
-            uni.navigateTo({
-              url: "/pages/conversionComplete/index?id=" + res.id,
-            });
+            if (res.sCode === 2) {
+              this.popText = "时长不足，转写失败,充值后可在转写记录重新提交.";
+              this.isPopupShow = true;
+              return;
+            }
+            this.isTaskShow = true;
+            this.taskAudioCreate(res.id);
           } else {
             this.$toast({
               type: "fail",
@@ -401,9 +414,6 @@ export default {
     },
     reset() {
       this.progress = 0;
-      this.uploadedSize = 0;
-      this.averageSpeed = 0;
-      this.timeRemaining = 0;
     },
     clickTab(index) {
       this.isActive = index;
@@ -417,9 +427,19 @@ export default {
     },
     // 新建转写任务
     async taskCreate(_id) {
-      var data = await this.$api.taskCreate({ id: _id, isLoading: true });
+      const { data } = await this.$api.taskCreate({ id: _id, isLoading: true });
       if (data) {
         this.$store.dispatch("setTaskState", true);
+      }
+    },
+    // 音频转写
+    async taskAudioCreate(_id) {
+      const { data } = await this.$api.taskAudioCreate({
+        id: _id,
+        isLoading: true,
+      });
+      if (data) {
+        this.taskCreate(_id);
       }
     },
     clickClose() {},
@@ -582,6 +602,7 @@ export default {
         uploadUrl: this.$apiPath.fileUpload,
         mergeUrl: this.$apiPath.fileMerge,
         testChunks: this.testChunks,
+        chunkSize: 3 * 1024 * 1204,
         verbose: true,
         timeout: 1920000,
       });
@@ -610,9 +631,8 @@ export default {
             this.isPopupShow = true;
             return;
           }
-          this.isTaskShow = true;
-          // 开始转写任务
-          this.taskCreate(res.id);
+          // // 开始转写任务
+          this.taskAudioCreate(res.id);
         }, 200);
         console.log("upload success", res);
       });
@@ -622,13 +642,6 @@ export default {
         this.$toast.clear();
       });
       uploader.on("progress", (res) => {
-        var _timeRemaining =
-          res.progress > 0
-            ? (res.timeRemaining / (1000 * 60) || 0).toFixed(2)
-            : 0;
-        this.uploadedSize = parseInt(res.uploadedSize / 1024);
-        this.averageSpeed = parseInt(res.averageSpeed / 1024);
-        this.timeRemaining = _timeRemaining;
         this.progress = res.progress || 0;
         this.$toast.clear();
         if (res.progress > 0) {
@@ -638,12 +651,14 @@ export default {
           if (this.progress === 100) {
             this.progress = 0;
             this.isUpdataShow = false;
-            this.$toast({
-              type: "loading",
-              selector: ".van-toast",
-              duration: 0,
-              message: "转换中",
-            });
+            this.$store.dispatch("setTaskShow", true);
+            this.isTaskShow = true;
+            // this.$toast({
+            //   type: "loading",
+            //   selector: ".van-toast",
+            //   duration: 0,
+            //   message: "处理中",
+            // });
             // this.conversion_progress(); // 转换进度条开始
           }
         }, 300);

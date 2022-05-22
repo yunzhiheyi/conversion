@@ -31,10 +31,6 @@ class apiController {
   async wechatAuth(data) {
     return await this.request(apiPath.wechatAuth, data);
   }
-  // 重新转写
-  async conversionRecordResubmit(data) {
-    return await this.request(apiPath.conversionRecordResubmit, data, 'POST');
-  }
   // 在线提取
   async conversionRecordParse(data) {
     return await this.request(apiPath.conversionRecordParse, data, 'POST');
@@ -113,6 +109,10 @@ class apiController {
   // 新建转写任务
   async taskCreate(data) {
     return await this.request(apiPath.taskCreate, data, 'POST');
+  }
+  // 新建音频转写任务
+  async taskAudioCreate(data) {
+    return await this.request(apiPath.taskAudioCreate, data, 'POST');
   }
   // 订单列表
   async getOrderList(data) {
