@@ -150,28 +150,29 @@ class apiController {
         header: headers,
         success: (res) => {
           // Token失效
-          if (res.data && res.data.code == 4000) {
-            // 刷新access_token
-            this.refreshToken({
-              isLoading: true,
-              token: refresh_token,
-            }).then((res) => {
-              // 获取存的请求信息再调一下自已本身
-              var request_info = uni.setStorageSync('request_info');
-              request_info &&
-                request_info.url &&
-                this.request(
-                  request_info.url,
-                  request_info.data,
-                  request_info.method,
-                ).then((res) => {
-                  // 移除保存的信息
-                  // uni.removeStorageSync('request_info');
-                });
-            });
-            this.clearLoading(isLoading);
-            return;
-          }
+          // if (res.data && res.data.code == 4000) {
+          //   // 刷新access_token
+          //   this.refreshToken({
+          //     isLoading: true,
+          //     token: refresh_token,
+          //   }).then((res) => {
+          //     // 获取存的请求信息再调一下自已本身
+          //     var request_info = uni.setStorageSync('request_info');
+          //     console.log(request_info);
+          //     request_info &&
+          //       request_info.url &&
+          //       this.request(
+          //         request_info.url,
+          //         request_info.data,
+          //         request_info.method,
+          //       ).then((res) => {
+          //         // 移除保存的信息
+          //         // uni.removeStorageSync('request_info');
+          //       });
+          //   });
+          //   this.clearLoading(isLoading);
+          //   return;
+          // }
           if (
             res.data &&
             (res.data.code == 4000 ||

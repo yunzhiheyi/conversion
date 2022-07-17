@@ -52,7 +52,7 @@
               mode="" />
             <view class="info">
               <text class="name">在线识别</text>
-              <view class="text">远程抖音、西瓜、快手短视频一键识别</view>
+              <view class="text">复制抖音、快手短视频地址一键识别</view>
             </view>
           </view>
         </view>
@@ -261,7 +261,7 @@ export default {
   onShareAppMessage(res) {
     return {
       title:
-        "语音转换精灵，基于AI语音识别，在线识别视频、语音，轻松转换文字脚本",
+        "语音转换精灵，基于AI语音识别，在线识别视频、语音，轻松转换文字脚本111",
       path: "/pages/home/index?inviter_code=" + this.userInfo.inviter_code,
       imageUrl: "https://cdn.maxbox.com.cn/upload/images/share.png",
     };
@@ -279,24 +279,6 @@ export default {
       this.$store.dispatch("setInviterCode", this.inviter_code);
       console.log("inviter_code:", "分享过来的");
     }
-    uni.getClipboardData({
-      success: (res) => {
-        console.log(res);
-        // android才隐藏
-        // uni.getSystemInfoSync().platform == "android" && uni.hideToast(); // 微信原生有弹一个成功Toast
-        uni.hideToast();
-        var ParseUrl = this.httpString(res.data);
-        if (res.data && ParseUrl) {
-          if (ParseUrl && ParseUrl[0]) {
-            this.ParseUrl = ParseUrl[0];
-            this.isPopupParse = true;
-          }
-        }
-      },
-      fail: (err) => {
-        console.log(err);
-      },
-    });
   },
   onUnload() {
     this.removeValue();
@@ -317,7 +299,7 @@ export default {
       this.ParseUrl = "";
       this.isPopupParse = false;
       clearInterval(this.clearInt);
-      this.$tools.clipboardData("取消", "", false);
+      // this.$tools.clipboardData("取消", "", false);
     },
     // 关闭删除弹窗
     onDelClose() {
@@ -327,17 +309,36 @@ export default {
     onParseClose() {
       this.isPopupParse = false;
       this.ParseUrl = "";
-      this.$tools.clipboardData("取消", "", false);
+      // this.$tools.clipboardData("取消", "", false);
     },
+    // 打在线识别
     openParsePopup() {
       if (!this.access_token) {
         uni.navigateTo({ url: "/pages/login/index" });
         return;
       }
-      this.$toast({
-        type: "info",
-        selector: "#van-toast",
-        message: "复制视频分享地址会自动识别解析",
+      uni.getClipboardData({
+        success: (res) => {
+          console.log(res);
+          // android才隐藏
+          // uni.getSystemInfoSync().platform == "android" && uni.hideToast(); // 微信原生有弹一个成功Toast
+          uni.hideToast();
+          var ParseUrl = this.httpString(res.data);
+          if (res.data && ParseUrl) {
+            if (ParseUrl && ParseUrl[0]) {
+              this.ParseUrl = ParseUrl[0];
+              this.isPopupParse = true;
+            }
+          }
+        },
+        fail: (err) => {
+          this.$toast({
+            type: "info",
+            selector: ".van-toast",
+            message: "复制地址点击即可自动识别与解析",
+          });
+          console.log("err", err);
+        },
       });
     },
     // 取消

@@ -8,11 +8,13 @@ import ApiPath from './api/index';
 import App from './App.vue';
 export function createApp() {
   const app = createSSRApp(App).use(store);
-  app.config.globalProperties.$notify = Notify;
-  app.config.globalProperties.$toast = Toast;
-  app.config.globalProperties.$api = Api;
-  app.config.globalProperties.$tools = Tools;
-  app.config.globalProperties.$apiPath = ApiPath;
+  setTimeout(() => {
+    app.config.globalProperties.$notify = Notify;
+    app.config.globalProperties.$toast = Toast;
+    app.config.globalProperties.$api = Api;
+    app.config.globalProperties.$tools = Tools;
+    app.config.globalProperties.$apiPath = ApiPath;
+  }, 500);
   return {
     app,
   };

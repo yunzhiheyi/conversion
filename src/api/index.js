@@ -3,7 +3,7 @@
  * @ use API地址
  */
 const HOST_IP = 'https://conversion-api.maxbox.com.cn';
-// const HOST_IP = 'http://192.168.101.6:3000';
+// const HOST_IP = 'http://192.168.101.5:3001';
 // const HOST_IP = 'https://junr.mynatapp.cc';
 export default {
   // 查询任务

@@ -1,6 +1,5 @@
 <template>
-  <view
-    class="home-share-side"
+  <view class="home-share-side"
     :class="{
       transition: transition,
     }"
@@ -11,8 +10,7 @@
     @touchend="touchend"
     @touchmove.stop.prevent="touchmove"
     @transitionend="transitionend"
-    id="home-share-side"
-  >
+    id="home-share-side">
     <slot />
   </view>
 </template>
